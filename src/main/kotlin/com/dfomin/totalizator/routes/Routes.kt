@@ -3,10 +3,8 @@ package com.dfomin.totalizator.routes
 import com.dfomin.totalizator.models.*
 import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.serialization.json.*
 
 
 fun Route.competitionsRoute() {
