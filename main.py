@@ -23,7 +23,7 @@ def competitions(update: Update, context: CallbackContext):
 
 
 def points(update: Update, context: CallbackContext):
-    competition_id, points_id = map(int, update.message.text.split())
+    _, competition_id, points_id = map(int, update.message.text.split())
     result = ""
     for name, value in server.points(competition_id, points_id).items():
         result += f"{name}: {value}\n"
