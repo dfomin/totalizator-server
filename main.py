@@ -22,6 +22,11 @@ def competitions(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text=result)
 
 
+def points(update: Update, context: CallbackContext):
+    result = server.points(1, 3)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=result)
+
+
 def main():
     random.seed(time())
 
@@ -38,6 +43,7 @@ def main():
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help))
     dispatcher.add_handler(CommandHandler("competitions", competitions))
+    dispatcher.add_handler(CommandHandler("points", points))
 
 
 if __name__ == "__main__":
