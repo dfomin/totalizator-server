@@ -123,6 +123,4 @@ def points(competition_id: int, points_id: int):
                     if abs(vote1 - score1) + abs(vote2 - score2) == 1:
                         user_points[name] += close
         response = {k: v for k, v in sorted(user_points.items(), key=lambda x: -x[1])}
-        for k, v in response.items():
-            print(f"{k}: {v}")
         return response
