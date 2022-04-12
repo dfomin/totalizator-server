@@ -1,6 +1,7 @@
 import random
 from time import time
 
+import telegram
 from telegram import Update
 from telegram.ext import Updater, Dispatcher, CommandHandler, CallbackContext
 
@@ -25,6 +26,9 @@ def main():
     random.seed(time())
 
     updater = Updater(TOKEN, use_context=True)
+
+    bot = telegram.Bot(token=TOKEN)
+    bot.set_webhook(f"https://dfomin.com:443/{TOKEN}")
 
     updater.start_webhook(listen="127.0.0.1",
                           port=5003,
