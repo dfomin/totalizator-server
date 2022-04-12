@@ -66,3 +66,6 @@ curl -X POST "http://0.0.0.0:8000/vote?user_id=5&match_id=5&score1=2&score2=1"
 curl -X POST "http://0.0.0.0:8000/vote?user_id=5&match_id=6&score1=2&score2=1"
 curl -X POST "http://0.0.0.0:8000/vote?user_id=6&match_id=5&score1=2&score2=1"
 curl -X POST "http://0.0.0.0:8000/vote?user_id=6&match_id=6&score1=3&score2=1"
+
+curl -X POST "http://0.0.0.0:8000/add_match_result?match_id=5&score1=1&score2=3"
+curl -X POST "http://0.0.0.0:8000/add_match_result?match_id=6&score1=1&score2=1"

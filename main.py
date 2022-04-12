@@ -23,8 +23,9 @@ def competitions(update: Update, context: CallbackContext):
 
 
 def points(update: Update, context: CallbackContext):
+    competition_id, points_id = map(int, update.message.text.split())
     result = ""
-    for name, value in server.points(1, 3).items():
+    for name, value in server.points(competition_id, points_id).items():
         result += f"{name}: {value}\n"
     context.bot.send_message(chat_id=update.effective_chat.id, text=result)
 
