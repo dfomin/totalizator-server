@@ -28,11 +28,11 @@ def competitions():
 
 
 @app.post(f"{prefix}/create_competition")
-def create_competition(name: str):
+def create_competition(name: str) -> int:
     with sqlite3.connect("data.db", check_same_thread=False) as connection:
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO competitions (name) VALUES (?)", (name,))
-        return "OK"
+        row_id = next(cursor.execute("INSERT INTO competitions (name) VALUES (?) RETURNING id", (name,)))
+        return row_id
 
 
 @app.get(f"{prefix}/users")
@@ -43,19 +43,26 @@ def users():
 
 
 @app.post(f"{prefix}/create_user")
-def create_user(name: str):
+def create_user(user_id: int, name: str):
     with sqlite3.connect("data.db", check_same_thread=False) as connection:
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO users (name) VALUES (?)", (name,))
-        return "OK"
+        cursor.execute("INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)", (user_id, name))
 
 
 @app.post(f"{prefix}/join")
 def join(user_id: int, competition_id: int):
     with sqlite3.connect("data.db", check_same_thread=False) as connection:
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO competition_users (user_id, competition_id) VALUES (?, ?)", (user_id, competition_id))
-        return "OK"
+        cursor.execute("INSERT OR IGNORE INTO competition_users (user_id, competition_id) VALUES (?, ?)", (user_id, competition_id))
+    return participants(competition_id)
+
+
+@app.post(f"{prefix}/participants")
+def participants(competition_id: int):
+    with sqlite3.connect("data.db", check_same_thread=False) as connection:
+        cursor = connection.cursor()
+        names = cursor.execute("SELECT name FROM users LEFT JOIN competition_users ON users.id = competition_users.user_id WHERE competition_id = ?", (competition_id,)).fetchall()
+        return [x[0] for x in names]
 
 
 @app.get(f"{prefix}/matches")
@@ -69,8 +76,8 @@ def matches():
 def add_match(competition_id: int, name: str):
     with sqlite3.connect("data.db", check_same_thread=False) as connection:
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO matches (competition_id, name, score1, score2) VALUES (?, ?, ?, ?)", (competition_id, name, None, None))
-        return "OK"
+        row_id = next(cursor.execute("INSERT INTO matches (competition_id, name, score1, score2) VALUES (?, ?, ?, ?) RETURNING id", (competition_id, name, None, None)))
+        return row_id
 
 
 @app.post(f"{prefix}/add_match_result")

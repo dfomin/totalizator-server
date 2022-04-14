@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY,
     name TEXT
 );
 
@@ -32,7 +32,9 @@ CREATE TABLE competition_users (
     competition_id INTEGER,
 
     FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(competition_id) REFERENCES competition(id)
+    FOREIGN KEY(competition_id) REFERENCES competition(id),
+
+    UNIQUE(user_id, competition_id)
 );
 
 CREATE TABLE votes (

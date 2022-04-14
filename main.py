@@ -10,7 +10,10 @@ from private import TOKEN
 
 
 def start(update: Update, context: CallbackContext):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="👋🏻")
+    user_id = update.message.from_user.id
+    user_name = update.message.from_user.name
+
+    server.create_user(user_id, user_name)
 
 
 def help(update: Update, context: CallbackContext):
@@ -20,6 +23,48 @@ def help(update: Update, context: CallbackContext):
 def competitions(update: Update, context: CallbackContext):
     result = server.competitions()
     context.bot.send_message(chat_id=update.effective_chat.id, text=result)
+
+
+def create_competition(update: Update, context: CallbackContext):
+    user_id = update.message.from_user.id
+
+    name = " ".join(update.message.text.split()[1:]).strip()
+    competition_id = server.create_competition(name)
+
+    server.join(user_id, competition_id)
+
+    context.bot.send_message(chat_id=update.effective_chat.id, text=competition_id)
+
+
+def join(update: Update, context: CallbackContext):
+    user_id = update.message.from_user.id
+
+    parts = update.message.text.split()
+    if len(parts) != 2:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="/join <competition_id>")
+        return
+
+    try:
+        competition_id = int(parts[1])
+        server.join(user_id, competition_id)
+    except ValueError:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="/join <competition_id>")
+        return
+
+
+def add_match(update: Update, context: CallbackContext):
+    parts = update.message.text.split()
+    if len(parts) != 3:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="/add_match <competition_id> <team1>-<team2>")
+        return
+
+    competition_id = int(parts[1])
+    name = parts[2]
+    if len(name.split("-")) != 2:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="/add_match <competition_id> <team1>-<team2>")
+        return
+
+    server.add_match(competition_id, name)
 
 
 def points(update: Update, context: CallbackContext):
@@ -45,7 +90,14 @@ def main():
     dispatcher: Dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help))
+
     dispatcher.add_handler(CommandHandler("competitions", competitions))
+    dispatcher.add_handler(CommandHandler("create_competition", create_competition))
+
+    dispatcher.add_handler(CommandHandler("join", join))
+
+    dispatcher.add_handler(CommandHandler("add_match", add_match))
+
     dispatcher.add_handler(CommandHandler("points", points))
 
 
