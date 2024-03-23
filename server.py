@@ -1,99 +1,61 @@
 import sqlite3
 from collections import defaultdict
-from pathlib import Path
+from typing import List
 
 from fastapi import FastAPI
 
+from database import Database
+
 app = FastAPI()
+database = Database("data.db")
 
 prefix = ""
 
 
-def init_db():
-    if not Path("data.db").exists():
-        with sqlite3.connect("data.db", check_same_thread=False) as connection:
-            cursor = connection.cursor()
-            with open("data.sql") as f:
-                cursor.executescript(f.read())
-
-
-init_db()
-
-
 @app.get(f"{prefix}/competitions")
 def competitions():
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        return cursor.execute("SELECT * FROM competitions").fetchall()
+    return database.competitions()
 
 
 @app.post(f"{prefix}/create_competition")
 def create_competition(name: str) -> int:
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        row_id = next(cursor.execute("INSERT INTO competitions (name) VALUES (?) RETURNING id", (name,)))
-        return row_id
+    return database.create_competition(name)
 
 
 @app.get(f"{prefix}/users")
 def users():
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        return cursor.execute("SELECT * FROM users").fetchall()
+    return database.users()
 
 
 @app.post(f"{prefix}/create_user")
 def create_user(user_id: int, name: str):
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        cursor.execute("INSERT OR IGNORE INTO users (id, name) VALUES (?, ?)", (user_id, name))
+    database.create_user(user_id, name)
 
 
 @app.post(f"{prefix}/join")
-def join(user_id: int, competition_id: int):
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        cursor.execute("INSERT OR IGNORE INTO competition_users (user_id, competition_id) VALUES (?, ?)", (user_id, competition_id))
+def join(user_id: int, competition_id: int) -> List[str]:
+    database.join(user_id, competition_id)
     return participants(competition_id)
 
 
 @app.post(f"{prefix}/participants")
-def participants(competition_id: int):
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        names = cursor.execute("SELECT name FROM users LEFT JOIN competition_users ON users.id = competition_users.user_id WHERE competition_id = ?", (competition_id,)).fetchall()
-        return [x[0] for x in names]
-
-
-@app.get(f"{prefix}/matches")
-def matches():
-    with sqlite3.connect("data.db") as connection:
-        cursor = connection.cursor()
-        return cursor.execute("SELECT * FROM matches;").fetchall()
+def participants(competition_id: int) -> List[str]:
+    return database.participants(competition_id)
 
 
 @app.post(f"{prefix}/add_match")
 def add_match(competition_id: int, name: str):
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        row_id = next(cursor.execute("INSERT INTO matches (competition_id, name, score1, score2) VALUES (?, ?, ?, ?) RETURNING id", (competition_id, name, None, None)))
-        return row_id
+    database.add_match(competition_id, name)
 
 
 @app.post(f"{prefix}/add_match_result")
 def add_match_result(match_id: int, score1: int, score2: int):
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        cursor.execute("UPDATE matches SET score1 = ?, score2 = ? WHERE id = ?", (score1, score2, match_id))
-        return "OK"
+    database.add_match_result(match_id, score1, score2)
 
 
 @app.post(f"{prefix}/vote")
 def vote(user_id: int, match_id: int, score1: int, score2: int):
-    with sqlite3.connect("data.db", check_same_thread=False) as connection:
-        cursor = connection.cursor()
-        cursor.execute("INSERT INTO votes (user_id, match_id, score1, score2) VALUES (?, ?, ?, ?)", (user_id, match_id, score1, score2))
-        return "OK"
+    database.vote(user_id, match_id, score1, score2)
 
 
 @app.get(f"{prefix}/votes")

@@ -99,3 +99,47 @@ curl -X POST "http://0.0.0.0:8000/vote?user_id=5&match_id=9&score1=2&score2=2"
 curl -X POST "http://0.0.0.0:8000/vote?user_id=6&match_id=9&score1=1&score2=0"
 
 curl -X POST "http://0.0.0.0:8000/add_match_result?match_id=9&score1=4&score2=3"
+
+curl -X POST "http://0.0.0.0:8000/add_match?competition_id=1&name=liverpool_villarreal"
+
+curl -X POST "http://0.0.0.0:8000/vote?user_id=1&match_id=10&score1=3&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=2&match_id=10&score1=2&score2=0"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=3&match_id=10&score1=2&score2=0"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=4&match_id=10&score1=3&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=5&match_id=10&score1=3&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=6&match_id=10&score1=2&score2=1"
+
+curl -X POST "http://0.0.0.0:8000/add_match_result?match_id=10&score1=2&score2=0"
+
+curl -X POST "http://0.0.0.0:8000/add_match?competition_id=1&name=villarreal_liverpool"
+
+curl -X POST "http://0.0.0.0:8000/vote?user_id=1&match_id=11&score1=1&score2=3"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=2&match_id=11&score1=1&score2=2"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=3&match_id=11&score1=1&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=4&match_id=11&score1=1&score2=2"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=5&match_id=11&score1=1&score2=3"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=6&match_id=11&score1=1&score2=2"
+
+curl -X POST "http://0.0.0.0:8000/add_match_result?match_id=11&score1=2&score2=3"
+
+curl -X POST "http://0.0.0.0:8000/add_match?competitioYn_id=1&name=real_mancity"
+
+curl -X POST "http://0.0.0.0:8000/vote?user_id=1&match_id=12&score1=1&score2=3"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=2&match_id=12&score1=1&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=3&match_id=12&score1=3&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=4&match_id=12&score1=2&score2=2"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=5&match_id=12&score1=2&score2=2"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=6&match_id=12&score1=2&score2=1"
+
+curl -X POST "http://0.0.0.0:8000/add_match_result?match_id=12&score1=2&score2=1"
+
+curl -X POST "http://0.0.0.0:8000/add_match?competition_id=1&name=liverpool_real"
+
+curl -X POST "http://0.0.0.0:8000/vote?user_id=1&match_id=13&score1=3&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=2&match_id=13&score1=2&score2=0"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=3&match_id=13&score1=2&score2=1"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=4&match_id=13&score1=3&score2=2"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=5&match_id=13&score1=3&score2=2"
+curl -X POST "http://0.0.0.0:8000/vote?user_id=6&match_id=13&score1=1&score2=2"
+
+curl -X POST "http://0.0.0.0:8000/add_match_result?match_id=13&score1=0&score2=1"
